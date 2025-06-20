@@ -12,53 +12,55 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
-    const newErrors = {};
-    
+    const newErrors: { [key: string]: string } = {};
+
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: { key: string; }) => {
     if (e.key === 'Enter') {
+      // TODO: Handle promise
       handleSubmit();
     }
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // Here you would typically make an actual API call
       console.log('Login attempt:', formData);
-      
+
       // Simulate successful login
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('user', JSON.stringify({
         email: formData.email,
         name: formData.email.split('@')[0]
       }));
-      
+
       // Redirect to dashboard or home page
       window.location.href = '/dashboard';
-      
+
     } catch (error) {
+      console.error('Login error:', error);
       setErrors({ general: 'Login failed. Please try again.' });
     } finally {
       setIsLoading(false);
@@ -71,8 +73,9 @@ export default function LoginPage() {
       ...prev,
       [name]: value
     }));
-    
+
     // Clear error when user starts typing
+    // TODO: handle these new elements so that it is not created on the fly
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -123,6 +126,7 @@ export default function LoginPage() {
                   value={formData.email}
                   onChange={handleChange}
                   onKeyPress={handleKeyPress}
+                    // TODO: handle these new elements created on the fly
                   className={`appearance-none relative block w-full pl-10 pr-3 py-3 border ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   } placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
@@ -152,6 +156,7 @@ export default function LoginPage() {
                   value={formData.password}
                   onChange={handleChange}
                   onKeyPress={handleKeyPress}
+                    // TODO: handle these new elements created on the fly
                   className={`appearance-none relative block w-full pl-10 pr-10 py-3 border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
