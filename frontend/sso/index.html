@@ -1,0 +1,201 @@
+<!-- demo file. Can be deleted later. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSO Popup Window Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .demo-container {
+            text-align: center;
+            color: white;
+            max-width: 600px;
+        }
+
+        .demo-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .demo-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .instructions h3 {
+            margin-bottom: 16px;
+            font-size: 1.2em;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            line-height: 1.6;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 style="margin-bottom: 24px; font-size: 2.5em;">SSO Popup Window Demo</h1>
+        
+        <div class="instructions">
+            <h3>📁 File Setup Required:</h3>
+            <ol>
+                <li>Save this page as <strong>"main.html"</strong></li>
+                <li>Create <strong>"popup.html"</strong> with the popup content (code provided below)</li>
+                <li>Place both files in the same folder</li>
+                <li>Open main.html in your browser and test!</li>
+            </ol>
+        </div>
+
+        <p style="margin-bottom: 24px; font-size: 1.1em; opacity: 0.9;">
+            Click below to open the SSO popup in a separate window
+        </p>
+        
+        <button class="demo-button" onclick="openSSOPopup()" id="ssoButton">
+            Open SSO Popup Window
+        </button>
+        
+        <div class="status" id="status">
+            <p>Popup window opened! Waiting for user action...</p>
+        </div>
+    </div>
+
+    <script>
+        let ssoPopup = null;
+
+        function openSSOPopup() {
+            // Close existing popup if open
+            if (ssoPopup && !ssoPopup.closed) {
+                ssoPopup.close();
+            }
+
+            // Popup window dimensions and position
+            const width = 450;
+            const height = 600;
+            const left = (window.screen.width - width) / 2;
+            const top = (window.screen.height - height) / 2;
+
+            // Open popup window with minimal browser chrome
+            ssoPopup = window.open(
+                'popup.html', // URL to popup content
+                'sso_popup', // Window name
+                `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no,status=no,menubar=no,toolbar=no,location=no,directories=no,titlebar=no,copyhistory=no,channelmode=no,fullscreen=no`
+            );
+
+            // Handle popup focus
+            if (ssoPopup) {
+                ssoPopup.focus();
+                showStatus('Popup window opened! Waiting for user action...');
+                
+                // Disable button while popup is open
+                document.getElementById('ssoButton').disabled = true;
+                
+                // Monitor popup window
+                const checkClosed = setInterval(() => {
+                    if (ssoPopup.closed) {
+                        clearInterval(checkClosed);
+                        showStatus('Popup was closed');
+                        document.getElementById('ssoButton').disabled = false;
+                        setTimeout(() => hideStatus(), 3000);
+                    }
+                }, 1000);
+            } else {
+                showStatus('Failed to open popup. Please allow popups for this site.');
+                setTimeout(() => hideStatus(), 5000);
+            }
+        }
+
+        function showStatus(message) {
+            const status = document.getElementById('status');
+            status.querySelector('p').textContent = message;
+            status.classList.add('show');
+        }
+
+        function hideStatus() {
+            document.getElementById('status').classList.remove('show');
+        }
+
+        // Listen for messages from popup
+        window.addEventListener('message', function(event) {
+            // Verify origin for security (in production, check against your domain)
+            if (event.origin !== window.location.origin) return;
+            
+            if (event.data.type === 'SSO_LOGIN') {
+                showStatus('User chose to sign in! Redirecting...');
+                // Handle login redirect here
+                setTimeout(() => {
+                    window.location.href = event.data.loginUrl;
+                }, 1000);
+            } else if (event.data.type === 'SSO_DISMISS') {
+                showStatus('User dismissed the popup');
+                document.getElementById('ssoButton').disabled = false;
+                setTimeout(() => hideStatus(), 3000);
+            }
+        });
+
+        // Handle page unload
+        window.addEventListener('beforeunload', function() {
+            if (ssoPopup && !ssoPopup.closed) {
+                ssoPopup.close();
+            }
+        });
+    </script>
+</body>
+</html>
