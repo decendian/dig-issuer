@@ -125,8 +125,8 @@
 
             // Open popup window with minimal browser chrome
             ssoPopup = window.open(
-                'popup.html', // URL to popup content
-                'sso_popup', // Window name
+                'http://localhost:3000/sso-popup', // Updated URL
+                'sso_popup',
                 `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no,status=no,menubar=no,toolbar=no,location=no,directories=no,titlebar=no,copyhistory=no,channelmode=no,fullscreen=no`
             );
 
@@ -178,6 +178,18 @@
                 showStatus('User dismissed the popup');
                 document.getElementById('ssoButton').disabled = false;
                 setTimeout(() => hideStatus(), 3000);
+            } else if (event.data.type === 'SSO_SUCCESS') {
+                showStatus('Login successful! Token received.');
+                // Store token or make API calls
+                localStorage.setItem('authToken', event.data.token);
+                document.getElementById('ssoButton').disabled = false;
+                
+                // Optional: verify token with your API
+                fetch('/userinfo', {
+                    headers: { 'Authorization': `Bearer ${event.data.token}` }
+                }).then(res => res.json()).then(user => {
+                    console.log('User info:', user);
+                });
             }
         });
 

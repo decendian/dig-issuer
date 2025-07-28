@@ -1,3 +1,4 @@
+// authController.js
 const {createToken} = require('../utils/token');
 
 exports.showLogin = (req, res) => {

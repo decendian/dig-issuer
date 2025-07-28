@@ -1,3 +1,4 @@
+//uploadController.js
 const {createToken} = require("../utils/token");
 exports.showUpload = (req, res) => {
   const { email, redirect_uri } = req.query;
