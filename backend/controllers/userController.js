@@ -10,7 +10,8 @@ exports.getUserInfo = (req, res) => {
     res.json({ email: user.email,
                 iat: user.iat,
                 exp: user.exp});
-  } catch {
+  } catch(error) {
+    console.error('Error verifying token:', error);
     res.status(401).send('Invalid token');
   }
 };
