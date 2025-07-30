@@ -1,14 +1,21 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { BACKEND_URL } from '../../../constants/urls';
 
 export default function SSOPopup() {
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  
+  // Get redirect_uri from URL params (passed by parent)
+  const redirectUri = searchParams.get('redirect_uri');
 
   const handleSignIn = () => {
     setIsLoading(true);
     
-    const loginUrl = `http://localhost:3001/auth?redirect_uri=${encodeURIComponent('http://localhost:3000/auth-callback')}`;
+    // Use the redirect_uri passed from the parent application
+    const loginUrl = `${BACKEND_URL}/auth?redirect_uri=${encodeURIComponent(redirectUri || '')}`;
     
     // Send message to parent window
     if (window.opener) {

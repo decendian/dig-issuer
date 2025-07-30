@@ -7,6 +7,7 @@ exports.showUpload = (req, res) => {
     return res.status(400).send('Missing parameters');
   }
 
+  // I sm noy sure what this, we can remove it later
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
