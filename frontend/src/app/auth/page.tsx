@@ -2,6 +2,8 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import AuthContainer from '../../components/ui/AuthContainer';
+import AuthHeader from '../../components/ui/AuthHeader';
 import { BACKEND_URL } from '../../../constants/urls';
 
 export default function AuthPage() {
@@ -46,37 +48,33 @@ export default function AuthPage() {
     };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center p-5">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl">
-            🔐
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Login to Continue</h2>
-          <p className="text-gray-600">Enter your email to sign in</p>
-        </div>
+    <AuthContainer>
+      <AuthHeader 
+        icon="🔐"
+        title="Login to Continue"
+        subtitle="Enter your email to sign in"
+      />
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          required
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-black placeholder-gray-500"
+        />
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-black placeholder-gray-500"
-          />
-          
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-60"
-          >
-            {isLoading ? 'Signing in...' : 'Log In'}
-          </button>
-        </form>
-        
-        <p className="text-center text-sm text-gray-500 mt-6">Powered by DIG</p>
-      </div>
-    </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-60"
+        >
+          {isLoading ? 'Signing in...' : 'Log In'}
+        </button>
+      </form>
+      
+      <p className="text-center text-sm text-gray-500 mt-6">Powered by DIG</p>
+    </AuthContainer>
   );
 }

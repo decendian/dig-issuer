@@ -2,6 +2,8 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import AuthContainer from '../../components/ui/AuthContainer';
+import AuthHeader from '../../components/ui/AuthHeader';
 import { BACKEND_URL } from '../../../constants/urls';
 
 export default function UploadPage() {
@@ -39,35 +41,33 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center p-5">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl">
-            📤
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome, {email}!</h2>
-          <p className="text-gray-600">Upload something to continue</p>
-        </div>
+    <AuthContainer gradientFrom="green-500" gradientTo="teal-600">
+      <AuthHeader 
+        icon="📤"
+        title={`Welcome, ${email}!`}
+        subtitle="Upload something to continue"
+        gradientFrom="green-500"
+        gradientTo="teal-600"
+      />
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          value={data}
+          onChange={(e) => setData(e.target.value)}
+          placeholder="Enter anything..."
+          required
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-black placeholder-gray-500"
+        />
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={data}
-            onChange={(e) => setData(e.target.value)}
-            placeholder="Enter anything..."
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-black placeholder-gray-500"
-          />
-          
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-6 rounded-lg font-medium hover:from-green-600 hover:to-teal-700 transition-all disabled:opacity-60"
-          >
-            {isLoading ? 'Uploading...' : 'Upload'}
-          </button>
-        </form>
-      </div>
-    </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-6 rounded-lg font-medium hover:from-green-600 hover:to-teal-700 transition-all disabled:opacity-60"
+        >
+          {isLoading ? 'Uploading...' : 'Upload'}
+        </button>
+      </form>
+    </AuthContainer>
   );
 }
