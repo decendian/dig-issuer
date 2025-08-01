@@ -1,3 +1,4 @@
+// userController.js
 const { verifyToken } = require('../utils/token');
 
 exports.getUserInfo = (req, res) => {

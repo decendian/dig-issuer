@@ -117,16 +117,18 @@
                 ssoPopup.close();
             }
 
-            // Popup window dimensions and position
+            // Define where you want the auth to redirect back to
+            const redirectUri = window.location.origin + '/auth-callback'; // or wherever your demo app wants to go
+            
             const width = 450;
             const height = 600;
             const left = (window.screen.width - width) / 2;
             const top = (window.screen.height - height) / 2;
 
-            // Open popup window with minimal browser chrome
+            // Pass redirect_uri as a URL parameter to the popup
             ssoPopup = window.open(
-                'popup.html', // URL to popup content
-                'sso_popup', // Window name
+                `http://localhost:3000/sso-popup?redirect_uri=${encodeURIComponent(redirectUri)}`,
+                'sso_popup',
                 `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no,status=no,menubar=no,toolbar=no,location=no,directories=no,titlebar=no,copyhistory=no,channelmode=no,fullscreen=no`
             );
 
@@ -165,12 +167,11 @@
 
         // Listen for messages from popup
         window.addEventListener('message', function(event) {
-            // Verify origin for security (in production, check against your domain)
-            if (event.origin !== window.location.origin) return;
+            // Verify origin for security
+            if (event.origin !== 'http://localhost:3000' && event.origin !== window.location.origin) return;
             
             if (event.data.type === 'SSO_LOGIN') {
                 showStatus('User chose to sign in! Redirecting...');
-                // Handle login redirect here
                 setTimeout(() => {
                     window.location.href = event.data.loginUrl;
                 }, 1000);
@@ -178,6 +179,14 @@
                 showStatus('User dismissed the popup');
                 document.getElementById('ssoButton').disabled = false;
                 setTimeout(() => hideStatus(), 3000);
+            } else if (event.data.type === 'SSO_SUCCESS') {
+                // Close the popup first
+                if (ssoPopup && !ssoPopup.closed) {
+                    ssoPopup.close();
+                }
+                
+                // Redirect the MAIN window to Next.js auth-callback
+                window.location.href = `http://localhost:3000/auth-callback?token=${event.data.token}`;
             }
         });
 

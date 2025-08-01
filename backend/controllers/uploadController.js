@@ -1,3 +1,4 @@
+//uploadController.js
 const {createToken} = require("../utils/token");
 exports.showUpload = (req, res) => {
   const { email, redirect_uri } = req.query;
@@ -6,6 +7,7 @@ exports.showUpload = (req, res) => {
     return res.status(400).send('Missing parameters');
   }
 
+  // I sm noy sure what this, we can remove it later
   res.send(`
     <!DOCTYPE html>
     <html lang="en">

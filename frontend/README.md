@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+make sure you have a `.env.local` file in the parent folder of this format:
+```
+NEXT_PUBLIC_FRONTEND_URL= YOUR_FRONTEND_URL
+NEXT_PUBLIC_BACKEND_URL= YOUR_BACKEND_URL
+```
+
 First, run the development server:
 
 ```bash

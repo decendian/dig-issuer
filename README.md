@@ -15,3 +15,11 @@ dig-issuer/backend/
 ├── package.json
 └── README.md
 ```
+
+Make sure to add a .env file of this format into the backend folder:
+
+```
+JWT_SECRET= YOUR_KEY
+FRONTEND_URL= YOUR_FRONTEND_URL
+BACKEND_URL= YOUR_BACKEND_URL
+```
