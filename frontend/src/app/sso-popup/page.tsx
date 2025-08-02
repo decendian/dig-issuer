@@ -1,13 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { BACKEND_URL } from '../../../constants/urls';
 import AuthContainer from '../../components/ui/AuthContainer';
 import AuthHeader from '../../components/ui/AuthHeader';
 
-
-export default function SSOPopup() {
+function SSOPopupContent() {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   
@@ -76,5 +75,13 @@ export default function SSOPopup() {
         </button>
       </div>
     </AuthContainer>
+  );
+}
+
+export default function SSOPopup() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SSOPopupContent />
+    </Suspense>
   );
 }
