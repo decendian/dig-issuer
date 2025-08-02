@@ -1,12 +1,13 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import AuthContainer from '../../components/ui/AuthContainer';
 import AuthHeader from '../../components/ui/AuthHeader';
 import { BACKEND_URL } from '../../../constants/urls';
 
-export default function UploadPage() {
+function UploadPageContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
   const redirectUri = searchParams.get('redirect_uri');
@@ -69,5 +70,13 @@ export default function UploadPage() {
         </button>
       </form>
     </AuthContainer>
+  );
+}
+
+export default function UploadPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UploadPageContent />
+    </Suspense>
   );
 }

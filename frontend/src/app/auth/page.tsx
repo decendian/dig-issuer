@@ -1,18 +1,19 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import AuthContainer from '../../components/ui/AuthContainer';
 import AuthHeader from '../../components/ui/AuthHeader';
 import { BACKEND_URL } from '../../../constants/urls';
 
-export default function AuthPage() {
+function AuthPageContent() {
   const searchParams = useSearchParams();
   const redirectUri = searchParams.get('redirect_uri');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
@@ -45,7 +46,7 @@ export default function AuthPage() {
     } finally {
         setIsLoading(false);
     }
-    };
+  };
 
   return (
     <AuthContainer>
@@ -76,5 +77,13 @@ export default function AuthPage() {
       
       <p className="text-center text-sm text-gray-500 mt-6">Powered by DIG</p>
     </AuthContainer>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthPageContent />
+    </Suspense>
   );
 }

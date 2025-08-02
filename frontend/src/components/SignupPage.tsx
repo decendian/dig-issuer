@@ -47,13 +47,13 @@ export default function SignupPage() {
     password: '',
     confirmPassword: '',
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: { [key: string]: string } = {};
     
     if (!formData.firstName.trim()) {
       newErrors.firstName = 'First name is required';
@@ -87,7 +87,7 @@ export default function SignupPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSubmit();
     }
@@ -115,14 +115,14 @@ export default function SignupPage() {
       // Redirect to dashboard
       window.location.href = '/dashboard';
       
-    } catch (error) {
+    } catch {
       setErrors({ general: 'Signup failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,

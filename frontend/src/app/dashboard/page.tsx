@@ -2,15 +2,21 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+// Define the user type
+interface User {
+  name: string;
+  email: string;
+}
+
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     const userData = localStorage.getItem('user');
     
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !userData) {
       router.push('/login');
     } else {
       setUser(JSON.parse(userData));
