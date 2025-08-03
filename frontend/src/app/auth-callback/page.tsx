@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-export default function AuthCallback() {
+function AuthCallbackContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -18,4 +18,12 @@ export default function AuthCallback() {
   }, [searchParams]);
 
   return <div>Processing authentication...</div>;
+}
+
+export default function AuthCallback() {
+  return (
+    <Suspense fallback={<div>Processing authentication...</div>}>
+      <AuthCallbackContent />
+    </Suspense>
+  );
 }

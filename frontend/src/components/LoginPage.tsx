@@ -7,7 +7,7 @@ export default function LoginPage() {
     email: '',
     password: '',
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -67,7 +67,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -75,7 +75,6 @@ export default function LoginPage() {
     }));
 
     // Clear error when user starts typing
-    // TODO: handle these new elements so that it is not created on the fly
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -230,7 +229,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Don't have an account?</span>
+                <span className="px-2 bg-white text-gray-500">Don&apos;t have an account?</span>
               </div>
             </div>
             <div className="mt-4 text-center">
