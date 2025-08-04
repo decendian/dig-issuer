@@ -22,6 +22,13 @@ jobs:
         cache: 'npm'
         cache-dependency-path: backend/package-lock.json
         
+    - name: Create dummy .env file for CI
+      working-directory: ./backend
+      run: |
+        echo "PORT=3001" > .env
+        echo "FRONTEND_URL=http://localhost:3000" >> .env
+        echo "BACKEND_URL=http://localhost:3001" >> .env
+        
     - name: Install backend dependencies
       working-directory: ./backend
       run: npm ci
@@ -31,11 +38,12 @@ jobs:
       run: npm run lint
       continue-on-error: false
       
-    - name: Test backend build
+    - name: Test backend syntax
       working-directory: ./backend
       run: |
-        # Check if the main app file can be required without errors
-        node -e "require('./app.js')" || echo "App loads successfully"
+        # Check syntax without starting server
+        node -c app.js
+        echo "✅ Backend syntax check passed"
 
   # Frontend CI Job  
   frontend-ci:
@@ -85,7 +93,8 @@ jobs:
       
     - name: Create dummy .env files for Docker build
       run: |
-        echo "FRONTEND_URL=http://localhost:3000" > backend/.env
+        echo "PORT=3001" > backend/.env
+        echo "FRONTEND_URL=http://localhost:3000" >> backend/.env
         echo "BACKEND_URL=http://localhost:3001" >> backend/.env
         echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3001" > frontend/.env.local
         
@@ -105,6 +114,6 @@ jobs:
     - name: CI Success
       run: |
         echo "🎉 All CI checks passed!"
-        echo "✅ Backend linting"
+        echo "✅ Backend linting and syntax check"
         echo "✅ Frontend linting, TypeScript, and build"
         echo "✅ Docker images build successfully"
