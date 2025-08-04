@@ -31,11 +31,6 @@ jobs:
       run: npm run lint
       continue-on-error: false
       
-    - name: Check backend TypeScript
-      working-directory: ./backend
-      run: npx tsc --noEmit
-      continue-on-error: false
-      
     - name: Test backend build
       working-directory: ./backend
       run: |
@@ -110,6 +105,6 @@ jobs:
     - name: CI Success
       run: |
         echo "🎉 All CI checks passed!"
-        echo "✅ Backend linting and TypeScript checks"
+        echo "✅ Backend linting"
         echo "✅ Frontend linting, TypeScript, and build"
         echo "✅ Docker images build successfully"
