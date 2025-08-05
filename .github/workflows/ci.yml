@@ -20,12 +20,11 @@ jobs:
         echo "BACKEND_URL=http://localhost:3001" >> backend/.env
         echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3001" > frontend/.env.local
         
-    - name: Build with Docker Compose
-      run: docker-compose build
+    - name: Build and start containers
+      run: docker compose up --build
       
-    - name: Test containers start successfully
-      run: |
-        docker-compose up -d
-        sleep 10
-        docker-compose ps
-        docker-compose down
+    - name: Check containers are running
+      run: docker compose ps
+      
+    - name: Stop containers
+      run: docker compose down
