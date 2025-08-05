@@ -1,8 +1,9 @@
 name: CI Pipeline
 
 on:
-  pull_request:
-    branches: [ "**" ]
+  push:
+    branches:
+      - "dev"
 
 jobs:
   docker-ci:
@@ -12,13 +13,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
-    - name: Create dummy .env files
-      run: |
-        echo "PORT=3001" > backend/.env
-        echo "FRONTEND_URL=http://localhost:3000" >> backend/.env
-        echo "BACKEND_URL=http://localhost:3001" >> backend/.env
-        echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:3001" > frontend/.env.local
         
     - name: Build and start containers
       run: docker compose up --build -d
