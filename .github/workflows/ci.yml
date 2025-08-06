@@ -16,9 +16,6 @@ jobs:
         
     - name: Build and start containers
       run: docker compose up --build -d
-      
-    - name: Check containers are running
-      run: docker compose ps
-      
+            
     - name: Stop containers
       run: docker compose down
