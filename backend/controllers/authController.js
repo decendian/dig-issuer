@@ -1,5 +1,5 @@
 // authController.js
-const {createToken} = require('../utils/token');
+// const {createToken} = require('../utils/token');
 const { FRONTEND_URL } = require('../constants/urls');
 
 exports.showLogin = (req, res) => {
