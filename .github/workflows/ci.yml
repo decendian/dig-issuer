@@ -13,6 +13,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      
+    - name: Create .env files from secrets
+      run: |
+        echo "PORT=${{ secrets.BACKEND_PORT }}" > backend/.env
+        echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> backend/.env
+        echo "BACKEND_URL=${{ secrets.BACKEND_URL }}" >> backend/.env
+        echo "NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}" > frontend/.env.local
         
     - name: Build and start containers
       run: docker compose up -d --build
