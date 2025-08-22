@@ -3,9 +3,46 @@ name: CI Pipeline
 on: workflow_dispatch
 
 jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18' # adjust to your version
+        cache: 'npm'
+        
+    # Test Backend
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: Run backend tests
+      run: |
+        cd backend
+        npm run test
+        
+    # Test Frontend  
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm run test
+
   docker-ci:
     name: Docker Build & Test
     runs-on: ubuntu-latest
+    needs: test # Only run Docker if tests pass
     
     steps:
     - name: Checkout code
