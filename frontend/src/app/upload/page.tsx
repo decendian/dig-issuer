@@ -6,7 +6,7 @@ import { useState } from 'react';
 import AuthContainer from '../../components/ui/AuthContainer';
 import AuthHeader from '../../components/ui/AuthHeader';
 import { BACKEND_URL } from '../../../constants/urls';
-import FileUpload from './file_upload';
+import FileUpload from '../../components/logistics/FileUpload';
 import { Bacasime_Antique } from 'next/font/google';
 function UploadPageContent() {
   const searchParams = useSearchParams();

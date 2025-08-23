@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-// Define the user type
 interface User {
   name: string;
   email: string;
@@ -13,13 +12,29 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    const userData = localStorage.getItem('user');
-    
-    if (!isAuthenticated || !userData) {
+    try {
+      const isAuthenticated = localStorage.getItem('isAuthenticated');
+      const userData = localStorage.getItem('user');
+      
+      // FIX 1: Check for exact string 'true', not just truthy
+      if (isAuthenticated !== 'true' || !userData) {
+        router.push('/login');
+        return;
+      }
+      
+      try {
+        // Add try-catch around JSON.parse
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      } catch (parseError) {
+        // Invalid JSON - redirect to login
+        console.error('Invalid user data JSON:', parseError);
+        router.push('/login');
+      }
+    } catch (storageError) {
+      // Handle localStorage errors
+      console.error('localStorage error:', storageError);
       router.push('/login');
-    } else {
-      setUser(JSON.parse(userData));
     }
   }, [router]);
 
